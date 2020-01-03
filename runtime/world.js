@@ -200,6 +200,11 @@ module.exports = function () {
     // set the default timeout for all tests
     this.setDefaultTimeout(global.DEFAULT_TIMEOUT);
 
+    // executed after each scenario (always closes the browser to ensure fresh tests)
+    this.Before(function (scenario) {
+        console.log("=============================Test Automation=============================");
+    });
+
     // create the driver and applitools eyes before scenario if it's not instantiated
     this.registerHandler('BeforeScenario', function (scenario) {
 
