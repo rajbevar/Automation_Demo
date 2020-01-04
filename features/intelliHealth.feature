@@ -8,8 +8,9 @@ Feature: Navigate to intelli health portal
    #Given the following <role> user exists with alias : <patientalias> else create: <create>
    When I navigate to intelli health portal
    And I selected the patient: <patientalias>
-   And I selected the <tabName> tab from patient dashboard
-   Then I added medications: <medicationAlias> for the patient: <patientalias>
+   #And I selected the <tabName> tab from patient dashboard
+   #Then I added medications: <medicationAlias> for the patient: <patientalias>
+   When I verified mobile application
 
    Examples: 
 		| scenario_id | description | patientalias | role | create | tabName | medicationAlias |
