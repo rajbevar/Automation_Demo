@@ -5,5 +5,7 @@ Feature: Navigate to intelli health portal
   I want to be able to search for information about the itunes vote cards app
   
   Scenario: Navigate to intelli health portal 
-   When I navigate to intelli health portal
-   And I selected the patient
+   #When I navigate to intelli health portal
+   #And I selected the patient
+   When I verified mobile application
+   
