@@ -119,7 +119,7 @@ module.exports = function () {
                     //console.log("aliasInfo: " + aliasInfo.userFName);
                     subjectName = aliasInfo.userLName + " " + aliasInfo.userFName;
                     console.log("subjectName: " + subjectName);
-                    let medAliasInfo = pageIntelliHealth.getObjectByAttribute('alias', medicaitonAlias, aliasInfo.medications);
+                    let medAliasInfo = utilities.getObjectByAttribute('alias', medicaitonAlias, aliasInfo.medications);
                     console.log("aliasInfo2: " + medAliasInfo.medicationName);
 
                     driver.findElement(pageIntelliHealth.btnNewMedication).click().then(function(){

@@ -4,7 +4,7 @@ Feature: Navigate to intelli health portal
   In order to find out more about the itunes vote cards app
   I want to be able to search for information about the itunes vote cards app
   
-  @TD-2 @TD-1 @intelli
+  @TD-2 @TD-1 @intelli @smoke
   Scenario Outline: Navigate to intelli health portal 
    Given the following <role> user exists with alias : <patientalias> else create: <create>
    When I navigate to intelli health portal

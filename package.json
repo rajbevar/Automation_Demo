@@ -64,6 +64,8 @@
     "selenium-webdriver": "3.5.0"
   },
   "devDependencies": {
+    "@wdio/appium-service": "^5.18.2",
+    "@wdio/cli": "^5.18.4",
     "assert": "^2.0.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
