@@ -1,0 +1,64 @@
+[
+    {
+        "alias": "james",
+        "username": "jamesjohnson_x_1568789013",
+        "userPass": "portal1Pass",
+        "userEmail": "JamesJ@demo.com",
+        "userFName": "Johnson",
+        "userLName": "James",
+        "userRole": "patient",
+        "dateOfBirth": "2020-01-02T10:37:58.542Z",
+        "gender": "male",
+        "phoneNumber": "16507687777",
+        "externalId": "",
+        "isDeleted": true,
+        "medications": [{
+            "medicationName": "Amlodipine",
+            "form": "tablet",
+            "dosage": "5mg",
+            "mode": "po",
+            "frequency": "breakfast",
+            "duration": 2
+        }],
+        "updateUnique": true
+    },
+    {
+        "alias": "james1",
+        "username": "jamesjohnson23_x_1568789024",
+        "userPass": "portal1Pass",
+        "userEmail": "JamesJ23@demo.com",
+        "userFName": "Johnson22",
+        "userLName": "James22",
+        "userRole": "patient",
+        "dateOfBirth": "1990-01-02T10:37:58.542Z",
+        "gender": "male",
+        "phoneNumber": "16507687777",
+        "externalId": "",
+        "isDeleted": true,
+        "medications": [{
+            "alias": "Amlodipine",
+            "medicationName": "Amlodipine",
+            "form": "tablet",
+            "dosage": "100mg",
+            "mode": "po",
+            "frequency": "breakfast",
+            "duration": 1
+        }],
+        "updateUnique": true
+    },
+    {
+        "alias": "oliver",
+        "username": "oliveremma_x_1568789013",
+        "userPass": "portal1Pass",
+        "userEmail": "EmmaO@demo.com",
+        "userFName": "Emma",
+        "userLName": "Oliver",
+        "userRole": "patient",
+        "dateOfBirth": "2020-01-02T10:37:58.542Z",
+        "gender": "female",
+        "phoneNumber": "1650768568",
+        "externalId": "",
+        "isDeleted": true,
+        "updateUnique": true
+    }
+]

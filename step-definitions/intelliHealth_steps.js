@@ -1,25 +1,23 @@
-let pageIntelliHealth = require("../page-objects/pageIntelliHealth.js");
-var needle = require('needle');
-let longWait = 20000;
-//var List  = require("collections/List");
-console.log("variable name:" + pageIntelliHealth.variable)
+const pageIntelliHealth = require("../page-objects/pageIntelliHealth.js");
+const utilities = require("../utilities.js");
+const needle = require('needle');
+const longWait = 20000;
 const wdio = require("webdriverio");
 const assert = require("assert");
+const dataFileDir = './data/';
+const dataFileFullPath = (dataFileDir + 'subjectData.json');
+
 
 module.exports = function () {
     
     this.Given(/^the following (.*) user exists with alias : (.*) else create: (.*)$/, function (role, patientAlias, create, callback) {
         let apiEndpoint = "https://patientengtranscriptionapithirdparty.azurewebsites.net/api/Patient";
-        let dataFileDir = './data/';
-        let dataFileFullPath = (dataFileDir + 'subjectData.json');
-        console.log("dataFileFullPath : " + dataFileFullPath);
-
         var options = {
             json: true
         };
 
-        pageIntelliHealth.readTestDataObjectFile(dataFileFullPath, function(dataObjects){
-            let aliasInfo = pageIntelliHealth.getObjectByAttribute('alias', patientAlias, dataObjects);
+        utilities.readTestDataObjectFile(dataFileFullPath, function(dataObjects){
+            let aliasInfo = utilities.getObjectByAttribute('alias', patientAlias, dataObjects);
             subjectName = aliasInfo.userLName + " " + aliasInfo.userFName;
             console.log("subjectName: " + subjectName);
             if(create.toUpperCase().trim() === "TRUE"){
@@ -49,11 +47,10 @@ module.exports = function () {
     });
 
     this.When(/^I navigate to intelli health portal$/, function (callback) {
-        //https://patientengweb.azurewebsites.net/patients/patientsummary/2654160
-        helpers.loadPage('https://patientengweb.azurewebsites.net/patients/patientsummary/2654160', 20).then(function() {
-            driver.sleep(15000);
-        }).then(function(){
-            callback();
+        helpers.loadPage('https://patientengweb.azurewebsites.net/patients', 20).then(function() {
+            driver.wait(until.elementsLocated(pageIntelliHealth.patientRows), longWait).then(function(){
+                callback();
+            });
         });
     });
 
@@ -62,19 +59,11 @@ module.exports = function () {
         let subjectName;
         let subjectIndex;
         let elementArray;
-    
-        driver.sleep(10000);
-        let dataFileDir = './data/';
-        let dataFileFullPath = (dataFileDir + 'subjectData.json');
-        console.log("dataFileFullPath : " + dataFileFullPath);
-
-        pageIntelliHealth.readTestDataObjectFile(dataFileFullPath, function(dataObjects){
-            //console.log("dataObject1: " + dataObjects);
-            let aliasInfo = pageIntelliHealth.getObjectByAttribute('alias', patientAlias, dataObjects);
+        driver.sleep(5000);
+        utilities.readTestDataObjectFile(dataFileFullPath, function(dataObjects){
+            let aliasInfo = utilities.getObjectByAttribute('alias', patientAlias, dataObjects);
             //console.log("aliasInfo: " + aliasInfo.userFName);
-            subjectName = aliasInfo.userLName + " " + aliasInfo.userFName;
-            console.log("subjectName: " + subjectName);
-            //driver.sleep(5000);    
+            subjectName = aliasInfo.userLName + " " + aliasInfo.userFName; 
             driver.findElements(pageIntelliHealth.patientNameHeaders).then(function(elements){
                 //console.log("element length: " + elements.length);
                 elementArray = elements;
@@ -89,9 +78,10 @@ module.exports = function () {
                 });          
             }).then(function(){
                 elementArray[parseInt(subjectIndex)].click();
-                driver.sleep(15000);
+                console.log("clicked on the patient:" + subjectName);
+                driver.sleep(5000);
             }).then(function(){
-                driver.wait(until.elementsLocated(pageIntelliHealth.tabDemographics), longWait).then(function(){
+                driver.wait(until.elementsLocated(pageIntelliHealth.labelPatientName), longWait).then(function(){
                     driver.findElement(pageIntelliHealth.tabDemographics).getText().then(function(tabText){
                         console.log("tabText: " + tabText);
                         assert(tabText === "Demographics", "Fail: expected text: Demographics not matched with actual : " + tabText);
@@ -122,7 +112,7 @@ module.exports = function () {
         }
 
         tabElement.click().then(function(){
-            driver.sleep(15000);
+            driver.sleep(2000);
             driver.wait(until.elementsLocated(pageIntelliHealth.labelMedicationChartHeader), longWait).then(function(){
                 driver.findElement(pageIntelliHealth.labelMedicationChartHeader).getText().then(function(chartText){
                     console.log("chartText: " + chartText);
@@ -134,106 +124,98 @@ module.exports = function () {
     });
 
     this.Then(/^I added medications: (.*) for the patient: (.*)$/, function (medicaitonAlias, patientAlias, callback) {
-        
-        elements.click()
-        //elements.click()
-        //driver.findElement(pageIntelliHealth.linkMedications).click();
-        
-        //page.googleSearch.linkMedications.click();
-        driver.sleep(5000);
-        callback();
-        //driver.wait(until.elementsLocated(page.googleSearch.linkMedications), 20000).then(function(){
-        //    callback();
-        //});
-    
-        driver.sleep(10000);
-        let dataFileDir = './data/';
-        let dataFileFullPath = (dataFileDir + 'subjectData.json');
-        console.log("dataFileFullPath : " + dataFileFullPath);
+        driver.wait(until.elementsLocated(pageIntelliHealth.labelMedicationChartHeader), longWait).then(function(){
+            driver.wait(until.elementsLocated(pageIntelliHealth.btnNewMedication), longWait).then(function(){
 
-        pageIntelliHealth.readTestDataObjectFile(dataFileFullPath, function(dataObjects){
-            //console.log("dataObject1: " + dataObjects);
-            let aliasInfo = pageIntelliHealth.getObjectByAttribute('alias', patientAlias, dataObjects);
-            //console.log("aliasInfo: " + aliasInfo.userFName);
-            subjectName = aliasInfo.userLName + " " + aliasInfo.userFName;
-            console.log("subjectName: " + subjectName);
-            let medAliasInfo = pageIntelliHealth.getObjectByAttribute('alias', medicaitonAlias, aliasInfo.medications);
-            console.log("aliasInfo2: " + medAliasInfo.medicationName);
+                //driver.sleep(10000);
+                //let dataFileDir = './data/';
+                //let dataFileFullPath = (dataFileDir + 'subjectData.json');
+                //console.log("dataFileFullPath : " + dataFileFullPath);
 
-            driver.findElement(pageIntelliHealth.btnNewMedication).click().then(function(){
-                driver.sleep(2000);
-                driver.findElements(pageIntelliHealth.btnAddNewMedication).then(function(elements){
-                    elements[1].click().then(function(){
+                utilities.readTestDataObjectFile(dataFileFullPath, function(dataObjects){
+                    //console.log("dataObject1: " + dataObjects);
+                    let aliasInfo = utilities.getObjectByAttribute('alias', patientAlias, dataObjects);
+                    //console.log("aliasInfo: " + aliasInfo.userFName);
+                    subjectName = aliasInfo.userLName + " " + aliasInfo.userFName;
+                    console.log("subjectName: " + subjectName);
+                    let medAliasInfo = pageIntelliHealth.getObjectByAttribute('alias', medicaitonAlias, aliasInfo.medications);
+                    console.log("aliasInfo2: " + medAliasInfo.medicationName);
+
+                    driver.findElement(pageIntelliHealth.btnNewMedication).click().then(function(){
                         driver.sleep(2000);
-                        driver.findElements(pageIntelliHealth.inputMedicaitonName).then(function(elements){
-                            elements[1].sendKeys(medAliasInfo.medicationName);
-                        }).then(function(){
-                            driver.findElements(pageIntelliHealth.inputForm).then(function(elements){
-                                elements[1].sendKeys(medAliasInfo.form);
-                            });
-                        }).then(function(){
-                            driver.findElements(pageIntelliHealth.inputDosage).then(function(elements){
-                                elements[1].sendKeys(medAliasInfo.dosage);
-                            });
-                        }).then(function(){
-                            driver.findElements(pageIntelliHealth.inputMode).then(function(elements){
-                                elements[1].sendKeys(medAliasInfo.mode);
-                            });
-                        }).then(function(){
-                            driver.findElements(pageIntelliHealth.inputFrequency).then(function(elements){
-                                elements[1].sendKeys(medAliasInfo.frequency);
-                            });
-                        }).then(function(){
-                            driver.findElements(pageIntelliHealth.inputDuration).then(function(elements){
-                                elements[1].click();
-                                elements[1].clear();
-                                elements[1].sendKeys(medAliasInfo.duration);
-                            });
-                        });
-                        //driver.findElement(pageIntelliHealth.inputMedicaitonName).sendKeys(medAliasInfo.medicationName);
-                        //driver.findElement(pageIntelliHealth.inputForm).sendKeys(medAliasInfo.form);
-                        //driver.findElement(pageIntelliHealth.inputDosage).sendKeys(medAliasInfo.dosage);
-                        //driver.findElement(pageIntelliHealth.inputMode).sendKeys(medAliasInfo.mode);
-                        //driver.findElement(pageIntelliHealth.inputFrequency).sendKeys(medAliasInfo.frequency);
-                        //driver.findElement(pageIntelliHealth.inputDuration).sendKeys(medAliasInfo.duration);
-                        driver.sleep(2000);
-                    }).then(function(){
-                        driver.findElements(pageIntelliHealth.btnSubmit).then(function(elements){
-                            elements[1].click();
-                            console.log("Medication added successfully");
+                        driver.wait(until.elementsLocated(pageIntelliHealth.btnAddNewMedication), longWait).then(function(){
+                            driver.findElement(pageIntelliHealth.btnAddNewMedication).click();
                             driver.sleep(2000);
+                            driver.wait(until.elementsLocated(pageIntelliHealth.inputMedicaitonName), longWait).then(function(){
+                                driver.findElements(pageIntelliHealth.inputMedicaitonName).then(function(elements){
+                                    elements[0].sendKeys(medAliasInfo.medicationName);
+                                }).then(function(){
+                                    driver.findElements(pageIntelliHealth.inputForm).then(function(elements){
+                                        elements[0].sendKeys(medAliasInfo.form);
+                                    });
+                                }).then(function(){
+                                    driver.findElements(pageIntelliHealth.inputDosage).then(function(elements){
+                                        elements[0].sendKeys(medAliasInfo.dosage);
+                                    });
+                                }).then(function(){
+                                    driver.findElements(pageIntelliHealth.inputMode).then(function(elements){
+                                        elements[0].sendKeys(medAliasInfo.mode);
+                                    });
+                                }).then(function(){
+                                    driver.findElements(pageIntelliHealth.inputFrequency).then(function(elements){
+                                        elements[0].sendKeys(medAliasInfo.frequency);
+                                    });
+                                }).then(function(){
+                                    driver.findElements(pageIntelliHealth.inputDuration).then(function(elements){
+                                        elements[0].click();
+                                        elements[0].clear();
+                                        elements[0].sendKeys(medAliasInfo.duration);
+                                    });
+                                });
+                            }).then(function(){
+                                driver.sleep(2000);
+                                driver.findElements(pageIntelliHealth.btnSubmit).then(function(elements){
+                                    elements[0].click();
+                                    console.log("Medication added successfully");
+                                    driver.sleep(2000);
+                                    driver.wait(until.elementsLocated(pageIntelliHealth.deviceTable)).then(function(){
+                                        callback();
+                                    });
+                                }); 
+                            });
                         });
-                    }).then(function(){
-                        callback();
                     });
                 });
             });
         });
     });
 
-    this.When(/^I verified mobile application$/, function(callback){
+    this.When(/^patient (.*) confirms added medication in mobile app$/, function(patientAlias, callback){
         const opts = {
-          port: 4723,
           capabilities: {
             platformName: "Android",
             platformVersion: "9.0",
             deviceName: "emulator-5554",
-            //app: "/Users/rajani/Downloads/ApiDemos-debug.apk",
             app: "/Users/rajani/Automation_Demo/patient_app_testing_with_api.apk",
             appPackage: "com.healthcare.bosch.patientapp",
-            //appActivity: "com.healthcare.bosch.patientapp",
-            //appActivity: "",
+            appActivity: ".activity.SplashActivity",
             automationName: "UiAutomator2",
-            noReset: true
-          }
+            noReset: true,
+            appWaitForLaunch: true
+          },
+          port: 4723,
+          logLevel: 'info',
+          host: 'localhost'
         };
 
-        async function main () {
+        async function verifyMedInApp (patientEmail, patientPassword) {
             const client = await wdio.remote(opts);
-            client.pause(20000)
+            //client.pause(20000)
+            //client.timeout(10000)
             const email_selector = 'new UiSelector().text("Email Address").resourceId("com.healthcare.bosch.patientapp:id/eTxtEmail")'
             const email = await client.$(`android=${email_selector}`)
-
+            //const email = await client.elementsByAndroidUIAutomator(email_selector);
+            email.waitForDisplayed(10000);
             //Button.click()
             console.log("wdio with remote options done")
             //console.log(client.findElement);
@@ -246,10 +228,11 @@ module.exports = function () {
             //const field = await client.$("com.healthcare.bosch.patientapp:id/fab");
             //field.waitForVisible()
             //await field.click();
-            await email.setValue("jamesj3@demo.com");
+            await email.setValue(patientEmail);
             const password_selector = 'new UiSelector().text("Password").resourceId("com.healthcare.bosch.patientapp:id/eTxtPassword")'
             const password = await client.$(`android=${password_selector}`) 
-            await password.setValue("password");
+            password.waitForDisplayed(10000);
+            await password.setValue(patientPassword);
             //const value = await email.getText();
             //assert.equal(value,"test234@demo.com");
             const go_button_selector = 'new UiSelector().resourceId("com.healthcare.bosch.patientapp:id/fab")'
@@ -262,19 +245,27 @@ module.exports = function () {
             //const medication_selector = await client.$(`android=${no_data_found_selector}`)
             const medication_selector = 'new UiSelector().resourceId("com.healthcare.bosch.patientapp:id/txtPatientId")'
             const medication_button = await client.$(`android=${medication_selector}`);
-            medication_button.waitForDisplayed(10000);
+            medication_button.waitForDisplayed(20000);
             await medication_button.click();
             const medication_img_selector = 'new UiSelector().resourceId("com.healthcare.bosch.patientapp:id/image_start")'
             const medication_img = await client.$(`android=${medication_img_selector}`);
-
+            medication_img.waitForDisplayed(20000);
             const medication_text_selector = 'new UiSelector().resourceId("com.healthcare.bosch.patientapp:id/title")'
             const medication_text = await client.$(`android=${medication_text_selector}`);
+
             const value = await email.getText();
             console.log("value:" + value);
             await client.deleteSession();
             callback();  
         }
-        main();
+        utilities.readTestDataObjectFile(dataFileFullPath, function(dataObjects){
+            let aliasInfo = utilities.getObjectByAttribute('alias', patientAlias, dataObjects);
+            //console.log("aliasInfo: " + aliasInfo.userFName);
+            patientEmail = aliasInfo.userEmail;
+            patientPassword = aliasInfo.userPass;
+            verifyMedInApp(patientEmail, patientPassword);
+        });
+        
     });    
 
 }; 
