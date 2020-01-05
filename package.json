@@ -67,7 +67,7 @@
     "@wdio/appium-service": "^5.18.2",
     "@wdio/cli": "^5.18.4",
     "assert": "^2.0.0",
-    "eslint": "^3.19.0",
+    "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.2.0",
     "mocha": "^6.0.0",
