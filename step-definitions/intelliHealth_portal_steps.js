@@ -160,6 +160,7 @@ module.exports = function () {
                                     console.log("Medication added successfully");
                                     driver.sleep(2000);
                                     driver.wait(until.elementsLocated(pageIntelliHealth.deviceTable)).then(function(){
+                                        //driver.quit();
                                         callback();
                                     });
                                 }); 
