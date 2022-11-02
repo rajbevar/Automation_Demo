@@ -50,7 +50,7 @@
     "cucumber-junit": "1.6.0",
     "electron": "^1.8.8",
     "electron-chromedriver": "^1.7.1",
-    "electron-packager": "^9.1.0",
+    "electron-packager": "^17.1.1",
     "electron-prebuilt": "^1.4.13",
     "eyes.selenium": "0.0.72",
     "fs-plus": "2.9.1",
